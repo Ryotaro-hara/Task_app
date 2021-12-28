@@ -1,0 +1,70 @@
+<main>
+    <h3>スケジュール一覧</h3>
+
+    <% if flash[:notice] %>
+        <p class="notice"><%= flash[:notice] %></p>
+    <% end %>
+
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>タイトル</th>
+            <th>開始日</th>
+            <th>終了日</th>
+            <th>終日</th>
+            <th>スケジュール更新日時</th>
+            <th>確認</th>
+            <th>編集</th>
+            <th>編集</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% if @schedules.present? %>
+            <% @schedules.each do |schedule| %>
+                <tr>
+                    <td><%= schedule.id %></td>
+                    <td><%= schedule.title %></td>
+                    <td><%= schedule.start_at.strftime("%Y年%m月%d日") %></td>
+                    <td><%= schedule.end_at.strftime("%Y年%m月%d日") %></td>
+                    <td>
+                        <% if schedule.all_day == true %>
+                        ○
+                        <% else schedule.all_day == false %> 
+                        
+                        <% end %>
+                    </td>
+                    <td><%= schedule.updated_at.to_s(:datetime_jp) %></td>
+                    <td>
+                        <%= link_to "確認", schedule %>
+                    </td>
+                    <td>
+                        <%= link_to "編集", [:edit, schedule] %>
+                    </td>
+                    <td>
+                        <%= link_to "削除", schedule, method: :delete, data:{confirm: "本当に削除差ますか？"} %>
+                    </td>
+                </tr>
+            <% end %>
+        <% else %>
+            <tr>
+                <td colspan = "9">現在登録しているスケジュールはありません</td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+
+    <p><%= link_to "スケジュール新規登録", :new_schedule %></p>
+</main>
+<footer>
+    <h1>
+        <% time = Time.now %>
+        <% 
+        year = time.year
+        month = time.month
+        day = time.day
+        %>       
+        <%= "現在の日時 :" + year.to_s + "年" + month.to_s + "月" + day.to_s + "日" + "  スケジュール合計 : " + "#{@schedules.count}" %>
+    </h1>
+</footer>
